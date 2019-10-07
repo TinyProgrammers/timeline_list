@@ -129,32 +129,52 @@ class TimelineItemRight extends TimelineItem {
   @override
   Widget build(BuildContext context) {
     final margin = properties.iconSize + TimelineBoxDecoration.LINE_GAP * 2;
+    final specialRightWidth = model.specialRightWidget == null
+        ? 0.0
+        : MediaQuery.of(context).size.width * 0.2;
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Container(
-              padding:
-                  const EdgeInsets.only(right: TimelineBoxDecoration.LINE_GAP),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(right: TimelineBoxDecoration.LINE_GAP),
               constraints: BoxConstraints(
-                  minHeight: margin,
-                  maxWidth: constraints.maxWidth - margin * 2.0),
-              child: model.child),
+                minHeight: margin,
+                maxWidth:
+                    constraints.maxWidth - margin * 2.0 - specialRightWidth,
+              ),
+              child: model.child,
+            ),
+          ),
           Container(
-              decoration: TimelineBoxDecoration(
-                  isFirst: model.isFirst,
-                  isLast: model.isLast,
-                  iconSize: model.icon != null
-                      ? properties.iconSize
-                      : TimelineBoxDecoration.DEFAULT_DOT_SIZE,
-                  iconBackground: model.iconBackground,
-                  properties: properties,
-                  timelinePosition: TimelinePosition.Right),
-              width: properties.iconSize * 2,
-              alignment: Alignment.center,
-              child: icon),
+            decoration: TimelineBoxDecoration(
+              isFirst: model.isFirst,
+              isLast: model.isLast,
+              iconSize: model.icon != null
+                  ? properties.iconSize
+                  : TimelineBoxDecoration.DEFAULT_DOT_SIZE,
+              isOutlined: model.isOutLined,
+              iconBackground: model.iconBackground,
+              properties: properties,
+              timelinePosition: TimelinePosition.Right,
+            ),
+            width: properties.iconSize * 2,
+            alignment: Alignment.center,
+            child: icon,
+          ),
+          if (model.specialRightWidget != null) ...[
+            Container(
+              margin: EdgeInsets.only(right: TimelineBoxDecoration.LINE_GAP),
+              constraints: BoxConstraints(
+                minHeight: margin,
+                maxWidth: specialRightWidth,
+              ),
+              child: model.specialRightWidget,
+            ),
+          ],
         ],
       );
     });

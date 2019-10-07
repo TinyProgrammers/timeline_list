@@ -7,45 +7,54 @@ class TimelineBoxDecoration extends Decoration {
   final double iconSize;
   final bool isFirst;
   final bool isLast;
+  final bool isOutlined;
   final TimelinePosition timelinePosition;
 
   static const double DEFAULT_DOT_SIZE = 12.0;
   static const double DEFAULT_ICON_SIZE = 24.0; // default icon size
   static const double LINE_GAP = 6.0;
 
-  TimelineBoxDecoration(
-      {this.properties,
-      this.iconSize,
-      this.iconBackground,
-      this.isFirst,
-      this.isLast,
-      this.timelinePosition});
+  TimelineBoxDecoration({
+    this.properties,
+    this.iconSize,
+    this.iconBackground,
+    this.isFirst,
+    this.isLast,
+    this.timelinePosition,
+    this.isOutlined = false,
+  });
 
   @override
   BoxPainter createBoxPainter([VoidCallback onChanged]) {
     switch (timelinePosition) {
       case TimelinePosition.Left:
         return _TimelinePainterLeft(
-            isFirst: isFirst,
-            isLast: isLast,
-            iconBackground: iconBackground,
-            properties: properties,
-            iconSize: iconSize);
+          isFirst: isFirst,
+          isLast: isLast,
+          iconBackground: iconBackground,
+          properties: properties,
+          iconSize: iconSize,
+          isOutlined: isOutlined,
+        );
       case TimelinePosition.Right:
         return _TimelinePainterRight(
-            isFirst: isFirst,
-            isLast: isLast,
-            iconBackground: iconBackground,
-            properties: properties,
-            iconSize: iconSize);
+          isFirst: isFirst,
+          isLast: isLast,
+          iconBackground: iconBackground,
+          properties: properties,
+          iconSize: iconSize,
+          isOutlined: isOutlined,
+        );
       case TimelinePosition.Center:
       default:
         return _TimelinePainterCenter(
-            isFirst: isFirst,
-            isLast: isLast,
-            properties: properties,
-            iconBackground: iconBackground,
-            iconSize: iconSize);
+          isFirst: isFirst,
+          isLast: isLast,
+          properties: properties,
+          iconBackground: iconBackground,
+          iconSize: iconSize,
+          isOutlined: isOutlined,
+        );
     }
   }
 }
@@ -59,32 +68,41 @@ abstract class _TimelinePainter extends BoxPainter {
   final TimelinePosition timelinePosition;
   final TimelineProperties properties;
 
-  _TimelinePainter(
-      {this.iconSize,
-      this.properties,
-      this.isFirst = false,
-      this.isLast = false,
-      this.timelinePosition,
-      iconBackground})
-      : linePaint = Paint()
+  _TimelinePainter({
+    this.iconSize,
+    this.properties,
+    this.isFirst = false,
+    this.isLast = false,
+    this.timelinePosition,
+    iconBackground,
+    isOutlined,
+  })  : linePaint = Paint()
           ..color = properties.lineColor
           ..strokeCap = StrokeCap.round
           ..strokeWidth = properties.lineWidth
           ..style = PaintingStyle.stroke,
         circlePaint = Paint()
           ..color = iconBackground ?? const Color(0xFFCCCCCC)
-          ..style = PaintingStyle.fill;
+          ..strokeWidth = 2
+          ..style = (isOutlined) ? PaintingStyle.stroke : PaintingStyle.fill;
 }
 
 class _TimelinePainterCenter extends _TimelinePainter {
-  _TimelinePainterCenter(
-      {iconSize, properties, isFirst, isLast, iconBackground})
-      : super(
-            iconSize: iconSize,
-            properties: properties,
-            isFirst: isFirst,
-            isLast: isLast,
-            iconBackground: iconBackground);
+  _TimelinePainterCenter({
+    iconSize,
+    properties,
+    isFirst,
+    isLast,
+    iconBackground,
+    isOutlined,
+  }) : super(
+          iconSize: iconSize,
+          properties: properties,
+          isFirst: isFirst,
+          isLast: isLast,
+          iconBackground: iconBackground,
+          isOutlined: isOutlined,
+        );
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
@@ -106,13 +124,21 @@ class _TimelinePainterCenter extends _TimelinePainter {
 }
 
 class _TimelinePainterLeft extends _TimelinePainter {
-  _TimelinePainterLeft({iconSize, properties, isFirst, isLast, iconBackground})
-      : super(
-            iconSize: iconSize,
-            properties: properties,
-            isFirst: isFirst,
-            isLast: isLast,
-            iconBackground: iconBackground);
+  _TimelinePainterLeft({
+    iconSize,
+    properties,
+    isFirst,
+    isLast,
+    iconBackground,
+    isOutlined,
+  }) : super(
+          iconSize: iconSize,
+          properties: properties,
+          isFirst: isFirst,
+          isLast: isLast,
+          iconBackground: iconBackground,
+          isOutlined: isOutlined,
+        );
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
@@ -143,13 +169,21 @@ class _TimelinePainterLeft extends _TimelinePainter {
 }
 
 class _TimelinePainterRight extends _TimelinePainter {
-  _TimelinePainterRight({iconSize, properties, isFirst, isLast, iconBackground})
-      : super(
-            iconSize: iconSize,
-            properties: properties,
-            isFirst: isFirst,
-            isLast: isLast,
-            iconBackground: iconBackground);
+  _TimelinePainterRight({
+    iconSize,
+    properties,
+    isFirst,
+    isLast,
+    iconBackground,
+    isOutlined,
+  }) : super(
+          iconSize: iconSize,
+          properties: properties,
+          isFirst: isFirst,
+          isLast: isLast,
+          iconBackground: iconBackground,
+          isOutlined: isOutlined,
+        );
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
